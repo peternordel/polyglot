@@ -25,6 +25,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "448915ef-703e-4107-ab4e-5b8944fa17d5"
+      }
+    },
+    "owner": "peternordel"
   }
 }
