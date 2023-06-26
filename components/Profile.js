@@ -7,10 +7,12 @@ import {
   Button,
   Pressable,
 } from "react-native";
-export default function Home() {
+import * as Speech from 'expo-speech';
+
+export default function Profile() {
   return (
     <View style={styles.container}>
-      <Text>Home Screen</Text>
+      <Text>Profile Screen</Text>
     </View>
   );
 }

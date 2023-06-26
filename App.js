@@ -4,39 +4,40 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { StyleSheet, Text, View, Button } from 'react-native';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
-import Home from "./components/Home";
-import Notes from "./components/Notes";
+import Translate from "./components/Translate";
+import Game from "./components/Game";
+import Profile from "./components/Profile"
 
 import * as Speech from 'expo-speech';
 
 const Tab = createBottomTabNavigator();
 export default function App() {
-  const playText = () => {
-    const thingToSay = '我愛你';
-    Speech.speak(thingToSay, {language: 'zh'});
-  };
   return (
     <NavigationContainer>
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: () => {
-            let iconName = "record";
-            if (route.name === "Record") {
-              iconName = "record-vinyl";
-            } else if (route.name === "History") {
-              iconName = "history";
+            let iconName = "question-circle";
+            if (route.name === "Translate") {
+              iconName = "people-arrows";
+            }
+            else if (route.name === "Check") {
+              iconName = "play";
+            }
+            else if (route.name === "Profile") {
+              iconName = 'user'
             }
             return <FontAwesome5 name={iconName} size={24} color="black" />;
           },
         })}
       >
-        <Tab.Screen name="Record" component={Home} />
-        <Tab.Screen name="History" component={Notes} />
+        <Tab.Screen name="Translate" component={Translate} />
+        <Tab.Screen name="Check" component={Game} />
+        <Tab.Screen name='Profile' component={Profile} />
       </Tab.Navigator>
-      {/* <Button title="Press to hear some words" onPress={playText} /> */}
     </NavigationContainer>
   );
-  }
+}
 
 
 const styles = StyleSheet.create({
