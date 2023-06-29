@@ -6,11 +6,10 @@ const SCREEN_HEIGHT = Dimensions.get('window').height
 const SCREEN_WIDTH = Dimensions.get('window').width
 
 const Cards = [
-  { id: "1", uri: require('../assets/1.jpg') },
-  { id: "2", uri: require('../assets/2.jpg') },
-  { id: "3", uri: require('../assets/3.jpg') },
-  { id: "4", uri: require('../assets/4.jpg') },
-  { id: "5", uri: require('../assets/5.jpg') },
+  { id: "1", originalText: 'This is a test.', translatedText: '這是一個測試' },
+  { id: "2", originalText: 'How are you doing today?', translatedText: '你今天怎麼樣' },
+  { id: "3", originalText: 'Do you speak Spanish?', translatedText: '¿Hablas español?' },
+  { id: "4", originalText: 'How are you doing today?', translatedText: 'cómo está hoy' }
 ]
 
 export default class Game extends React.Component {
@@ -20,7 +19,8 @@ export default class Game extends React.Component {
 
     this.position = new Animated.ValueXY()
     this.state = {
-      currentIndex: 0
+      currentIndex: 0,
+      showOriginalLanguage: true
     }
 
     this.rotate = this.position.x.interpolate({
@@ -75,7 +75,10 @@ export default class Game extends React.Component {
             toValue: { x: SCREEN_WIDTH + 100, y: gestureState.dy },
             useNativeDriver: false
           }).start(() => {
-            this.setState({ currentIndex: this.state.currentIndex + 1 }, () => {
+            this.setState({
+              currentIndex: this.state.currentIndex + 1,
+              showOriginalLanguage: this.state.showOriginalLanguage
+            }, () => {
               this.position.setValue({ x: 0, y: 0 })
             })
           })
@@ -85,7 +88,10 @@ export default class Game extends React.Component {
             toValue: { x: -SCREEN_WIDTH - 100, y: gestureState.dy },
             useNativeDriver: false
           }).start(() => {
-            this.setState({ currentIndex: this.state.currentIndex + 1 }, () => {
+            this.setState({
+              currentIndex: this.state.currentIndex + 1,
+              showOriginalLanguage: this.state.showOriginalLanguage
+            }, () => {
               this.position.setValue({ x: 0, y: 0 })
             })
           })
@@ -123,10 +129,9 @@ export default class Game extends React.Component {
               <Text style={{ borderWidth: 1, borderColor: 'red', color: 'red', fontSize: 32, fontWeight: '800', padding: 10 }}>👎</Text>
 
             </Animated.View>
-
-            <Image
-              style={{ flex: 1, height: null, width: null, resizeMode: 'cover', borderRadius: 20 }}
-              source={item.uri}/>
+              <View style={{alignItems: 'center', justifyContent: 'center'}}>
+                <Text>{this.state.showOriginalLanguage ? item.originalText : item.translatedText}</Text> 
+              </View>
           </Animated.View>
         )
       }
@@ -148,11 +153,10 @@ export default class Game extends React.Component {
               <Text style={{ borderWidth: 1, borderColor: 'red', color: 'red', fontSize: 32, fontWeight: '800', padding: 10 }}>👎</Text>
 
             </Animated.View>
-
-            <Image
-              style={{ flex: 1, height: null, width: null, resizeMode: 'cover', borderRadius: 20 }}
-              source={item.uri} />
-
+              {/*This should exactly match what we have above for the active card.*/}
+              <View style={{alignItems: 'center', justifyContent: 'center'}}>
+                <Text>{this.state.showOriginalLanguage ? item.originalText : item.translatedText}</Text> 
+              </View>
           </Animated.View>
         )
       }
@@ -160,13 +164,15 @@ export default class Game extends React.Component {
   }
 
   render() {
-    function handlePress() {
-      console.log('pressed!')
-    }
+    const handlePress = () => {this.setState({
+        currentIndex: this.state.currentIndex,
+        showOriginalLanguage: !this.state.showOriginalLanguage
+      })}
+    
     return (
       <View style={{ flex: 1 }}>
         <View style={{ height: 60 }} />
-        <View style={{ flex: 1 }}>{this.renderCards()}</View>
+        <View style={{ flex: 1, userSelect: 'none'}}>{this.renderCards()}</View>
         <View style={{ height: 60 }} />
         <View style={{alignItems: 'center', justifyContent: 'center', height: 60}}>
           <Pressable onPress={() => handlePress()} style={{backgroundColor: '#ffffff', borderRadius: '5px', padding: '5px'}}>

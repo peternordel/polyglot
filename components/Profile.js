@@ -7,12 +7,11 @@ import {
   Button,
   Pressable,
 } from "react-native";
-import * as Speech from 'expo-speech';
 
-export default function Profile() {
+export default function Profile({ userInfo, setUserInfo }) {
   return (
     <View style={styles.container}>
-      <Text>Profile Screen</Text>
+      <Text>User is logged in.</Text>
     </View>
   );
 }

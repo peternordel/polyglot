@@ -1,97 +1,143 @@
-import React, { Component, useEffect, useState } from "react";
-import { FontAwesome } from "@expo/vector-icons";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Button,
-  Image,
-  TouchableHighlight,
-} from "react-native";
-import Voice from "@react-native-voice/voice";
+import { StyleSheet, Text, Button, View, Pressable } from 'react-native';
+import { useEffect, useState } from 'react';
+// import Voice from '@react-native-voice/voice';
+import { StatusBar } from 'expo-status-bar';
+import LIBRE_API_KEY from '../apiKey'
 import * as Speech from 'expo-speech';
-
+import { FontAwesome5 } from '@expo/vector-icons';
 
 export default function Translate() {
-  // const [started, setStarted] = useState(false);
-  // const [results, setResults] = useState([]);
+  
+  const languagesFromEnglish = [
+      "ar",
+      "az",
+      "cs",
+      "da",
+      "de",
+      "el",
+      "en",
+      "eo",
+      "es",
+      "fa",
+      "fi",
+      "fr",
+      "ga",
+      "he",
+      "hi",
+      "hu",
+      "id",
+      "it",
+      "ja",
+      "ko",
+      "nl",
+      "pl",
+      "pt",
+      "ru",
+      "ru",
+      "sk",
+      "sv",
+      "tr",
+      "uk",
+      "zh"
+    ]
+
+  const [formData, setFormData] = useState({
+    q: "",
+    source: "en",
+    target: "",
+    format: "text",
+    api_key: LIBRE_API_KEY
+  })
+  
+  function translate_text(){
+    fetch("https://libretranslate.com/translate", {
+      method: "POST",
+      body: JSON.stringify(formData),
+      headers: { "Content-Type": "application/json" }
+    })
+    .then(res => res.json())
+    .then(data => {
+      playText(data.translatedText)
+      // post to our server with the information
+    })
+  }
+
+    function handleChange (e) {
+      const { name, value } = e.target
+      setFormData(prevFormData => ({...prevFormData, [name]: value}))
+    }
+
+    function handleSubmit (e) {
+      e.preventDefault()
+      translate_text()
+    }
+
+    function playText(text) {
+      console.log(text, formData.target)
+      Speech.speak(text, {language: formData.target});
+    }
+
+  // let [started, setStarted] = useState(false);
+  // let [results, setResults] = useState([]);
 
   // useEffect(() => {
   //   Voice.onSpeechError = onSpeechError;
   //   Voice.onSpeechResults = onSpeechResults;
+
   //   return () => {
   //     Voice.destroy().then(Voice.removeAllListeners);
   //   }
-  // }, [])
+  // }, []);
 
-  // async function startSpeechToText() {
-  //   await Voice.start('en-US');
-  //   console.log('in start')
+  // const startSpeechToText = async () => {
+  //   await Voice.start("en-NZ");
   //   setStarted(true);
+  // };
 
-  //   playText();
-  // }
-
-  // async function stopSpeechToText() {
+  // const stopSpeechToText = async () => {
   //   await Voice.stop();
-  //   console.log('in stop')
   //   setStarted(false);
-  // }
+  // };
 
-  // function onSpeechResults(result) {
+  // const onSpeechResults = (result) => {
   //   setResults(result.value);
-  // }
+  // };
 
-  // function onSpeechError(error) {
+  // const onSpeechError = (error) => {
   //   console.log(error);
-  // }
-  
-  // function translateText(string) {
-  //   // fetch from deepL...
-  //   playText(translatedString, language);
-  // }
-  
-  // function playText(string = 'Error: no args received.', language = 'en') {
-  //   Speech.speak(string, {'language': language});
-  // }
+  // };
 
   return (
     <View style={styles.container}>
-        <Text>Hello, world! We are in the Translate component.</Text>
-        {/* {started ? 
-          (<Button title='Stop recording' onPress={() => stopSpeechToText} />) :
-          (<Button title='Start recording' onPress={() => startSpeechToText} />)
-        }
-        {results.map((result, index) => <Text key={index}>{result}</Text>)} */}
+      {/* {!started ? <Button title='Start Speech to Text' onPress={startSpeechToText} /> : undefined}
+      {started ? <Button title='Stop Speech to Text' onPress={stopSpeechToText} /> : undefined}
+      {results.map((result, index) => <Text key={index}>{result}</Text>)} */}
+          <form className="new-translation" onSubmit={handleSubmit}>
+            <label>
+              Text:
+              <input type="text" name="q" onChange={handleChange} value={formData.q}/>
+            </label>
+            <br/>
+            <label>
+              Target Language:
+              <select name="target" onChange={handleChange} value={formData.target}>
+                <option></option>
+                {languagesFromEnglish.map((languageCode, index) => <option key={index} value={languageCode}>{languageCode}</option>)}
+              </select>
+            </label>
+            <br/>
+            <button type="submit">Translate</button>
+          </form>
+      <StatusBar style="auto" />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  button: {
-    width: 50,
-    height: 50,
-  },
-  container: {},
-  welcome: {
-    fontSize: 20,
-    textAlign: "center",
-    margin: 10,
-  },
-  action: {
-    textAlign: "center",
-    color: "#0000FF",
-    marginVertical: 5,
-    fontWeight: "bold",
-  },
-  instructions: {
-    textAlign: "center",
-    color: "#333333",
-    marginBottom: 5,
-  },
-  stat: {
-    textAlign: "center",
-    color: "#B0171F",
-    marginBottom: 1,
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

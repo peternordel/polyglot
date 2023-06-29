@@ -20,7 +20,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.SpeectToTextApp"
+      "bundleIdentifier": "com.peternordel.polyglot"
     },
     "infoPlist": {
       "NSSpeechRecognitionUsageDescription": "This app uses speech recognition to enable speech to speech translation.",
@@ -32,7 +32,7 @@
         "backgroundColor": "#ffffff"
       },
       "permissions": ["android.permission.RECORD_AUDIO"],
-      "package": "com.anonymous.SpeectToTextApp"
+      "package": "com.peternordel.polyglot"
     },
     "web": {
       "favicon": "./assets/favicon.png"
